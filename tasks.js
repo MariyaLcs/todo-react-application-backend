@@ -36,7 +36,7 @@ app.get("/tasks", function (req, res) {
 
 app.post("/tasks", function (req, res) {
   const text = req.body.text;
-  const date = req.body.dueDate;
+  const date = req.body.createdDate;
   res.status(201).json({
     message: `Received a request to add task: ${text}, with date: ${date}`,
   });
