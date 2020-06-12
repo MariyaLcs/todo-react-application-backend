@@ -1,4 +1,4 @@
-service: todo-react-application-backend
+service: todo-react-application-backend2
 
 provider:
   name: aws
@@ -7,9 +7,21 @@ provider:
 
 functions:
   tasks:
-    handler: handler.tasks
+    handler: tasks.handler
     events:
       - http:
           path: tasks
           method: get
+          cors: true
+      - http:
+          path: tasks
+          method: post
+          cors: true
+      - http:
+          path: tasks/{taskId}
+          method: delete
+          cors: true
+      - http:
+          path: tasks/{taskId}
+          method: put
           cors: true
