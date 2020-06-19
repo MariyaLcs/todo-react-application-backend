@@ -81,12 +81,37 @@ app.delete("/tasks/:task_id", function (req, res) {
   });
 });
 
-app.put("/tasks/:taskId", function (req, res) {
-  const taskIdToAmmend = req.params.taskId;
-  let putResponse = {
-    message: `You issued a Put request for ID: ${taskIdToAmmend}`,
-  };
-  res.send(putResponse);
+// {
+//   "user_id": 2,
+//   "text": "water something else",
+//   "completed": false,
+//   "deleted": false,
+//   "date": "2019-10-12"
+// }
+
+app.put("/tasks/:task_id", function (req, res) {
+  const updateQuery =
+    "UPDATE tasks SET text=?, deleted=?, completed=?, date=? WHERE task_id=?";
+  connection.query(
+    updateQuery,
+    [
+      req.body.text,
+      req.body.deleted,
+      req.body.completed,
+      req.body.date,
+      req.params.task_id,
+    ],
+    function (error, data) {
+      if (error) {
+        console.log("Error updating a task", error);
+        res.status(500).json({
+          error: error,
+        });
+      } else {
+        res.sendStatus(200);
+      }
+    }
+  );
 });
 
 module.exports.handler = serverless(app);
