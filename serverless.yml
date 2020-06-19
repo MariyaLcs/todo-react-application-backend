@@ -22,10 +22,10 @@ functions:
           method: post
           cors: true
       - http:
-          path: tasks/{task_id}
+          path: tasks/{taskId}
           method: delete
           cors: true
       - http:
-          path: tasks/{task_id}
+          path: tasks/{taskId}
           method: put
           cors: true
