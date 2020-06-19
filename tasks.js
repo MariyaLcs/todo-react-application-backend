@@ -67,18 +67,18 @@ app.post("/tasks", function (req, res) {
   );
 });
 
-app.delete("/tasks/:taskId", function (req, res) {
-  const id = req.params.taskId;
-  let someResponse = {
-    message: `You issued a delete request for ID: ${id}`,
-  };
-  if (id > 3) {
-    res.status(404);
-    someResponse = {
-      message: `Task ${id} does not exist`,
-    };
-  }
-  res.json(someResponse);
+app.delete("/tasks/:task_id", function (req, res) {
+  const deleteQuery = "DELETE FROM tasks WHERE task_id=?";
+  connection.query(deleteQuery, [req.params.task_id], function (error, data) {
+    if (error) {
+      console.log("Error deleting a task", error);
+      res.status(500).json({
+        error: error,
+      });
+    } else {
+      res.status(200).send(data);
+    }
+  });
 });
 
 app.put("/tasks/:taskId", function (req, res) {
