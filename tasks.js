@@ -1,45 +1,62 @@
-"use strict";
-
 const express = require("express");
 const serverless = require("serverless-http");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const mysql = require("mysql");
 
 const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
 
+const connection = mysql.createConnection({
+  host: "tr-todos-3.ckdfhksh7ic7.eu-west-1.rds.amazonaws.com",
+  user: "admin",
+  password: "!QAZ2wsx4",
+  database: "todos",
+});
+
 app.get("/tasks", function (req, res) {
-  const listTasks = [
-    {
-      text: "Task1",
-      completed: false,
-      createdDate: "2020-05-05",
-      id: 1,
-    },
-    {
-      text: "Task2",
-      completed: false,
-      createdDate: "2020-05-05",
-      id: 2,
-    },
-    {
-      text: "Task3",
-      completed: false,
-      createdDate: "2020-05-05",
-      id: 3,
-    },
-  ];
-  res.send({ listTasks });
+  const query = "SELECT * FROM tasks;";
+  connection.query(query, function (err, data) {
+    if (err) {
+      console.log("Error fetching tasks", err);
+      res.status(500).json({
+        error: err,
+      });
+    } else {
+      res.status(200).json({
+        tasks: data,
+      });
+    }
+  });
 });
 
 app.post("/tasks", function (req, res) {
-  const text = req.body.text;
-  const date = req.body.createdDate;
-  res.status(201).json({
-    message: `Received a request to add task: ${text}, with date: ${date}`,
-  });
+  const query =
+    "INSERT INTO task (user_id, text, completed, deleted, date) VALUES (?, ?, ?, ?, ?);";
+  connection.query(
+    query,
+    [
+      req.body.user_id,
+      req.body.text,
+      req.body.completed,
+      req.body.deleted,
+      req.body.date,
+    ],
+    function (error, data) {
+      if (error) {
+        console.log("Error adding a task", error);
+        res.status(500).json({
+          error: error,
+        });
+      } else {
+        res.status(201).json({
+          data: data,
+        });
+      }
+    }
+  );
 });
 
 app.delete("/tasks/:taskId", function (req, res) {
