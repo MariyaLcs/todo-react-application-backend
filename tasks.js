@@ -10,9 +10,9 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const connection = mysql.createConnection({
-  host: "tr-todos-3.ckdfhksh7ic7.eu-west-1.rds.amazonaws.com",
-  user: "admin",
-  password: "!QAZ2wsx4",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
   database: "todos",
 });
 
