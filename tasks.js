@@ -32,9 +32,17 @@ app.get("/tasks", function (req, res) {
   });
 });
 
+// {
+//   "user_id": 2,
+//   "text": "water the cacti",
+//   "completed": false,
+//   "deleted": false,
+//   "date": "2019-10-12"
+// }
+
 app.post("/tasks", function (req, res) {
   const query =
-    "INSERT INTO task (user_id, text, completed, deleted, date) VALUES (?, ?, ?, ?, ?);";
+    "INSERT INTO tasks (user_id, text, completed, deleted, date) VALUES (?, ?, ?, ?, ?);";
   connection.query(
     query,
     [
